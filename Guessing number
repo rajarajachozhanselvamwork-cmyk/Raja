@@ -1,0 +1,64 @@
+import javax.swing.JOptionPane;
+import java.util.Random;
+
+public class GuessTheNumberGame {
+
+    public static void main(String[] args) {
+        Random random = new Random();
+        boolean playAgain = true;
+
+        while (playAgain) {
+            int numberToGuess = random.nextInt(100) + 1; // Random number 1-100
+            int attempts = 0;
+            int maxAttempts = 10;
+            boolean guessedCorrectly = false;
+
+            JOptionPane.showMessageDialog(null,
+                    "Welcome to Guess the Number!\nGuess a number between 1 and 100.\nYou have " + maxAttempts + " attempts.");
+
+            while (attempts < maxAttempts) {
+                String input = JOptionPane.showInputDialog("Enter your guess (" + (attempts + 1) + "/" + maxAttempts + "):");
+
+                if (input == null) { // User clicked cancel
+                    JOptionPane.showMessageDialog(null, "Game exited.");
+                    System.exit(0);
+                }
+
+                int guess = 0;
+                try {
+                    guess = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number!");
+                    continue;
+                }
+
+                attempts++;
+
+                if (guess < numberToGuess) {
+                    JOptionPane.showMessageDialog(null, "Higher! Try again.");
+                } else if (guess > numberToGuess) {
+                    JOptionPane.showMessageDialog(null, "Lower! Try again.");
+                } else {
+                    guessedCorrectly = true;
+                    int score = maxAttempts - attempts + 1;
+                    JOptionPane.showMessageDialog(null,
+                            "Congratulations! You guessed the number " + numberToGuess +
+                                    " in " + attempts + " attempts.\nYour score: " + score);
+                    break;
+                }
+            }
+
+            if (!guessedCorrectly) {
+                JOptionPane.showMessageDialog(null, "Sorry! You did not guess the number.\nThe number was: " + numberToGuess);
+            }
+
+            int replay = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play Again",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (replay != JOptionPane.YES_OPTION) {
+                playAgain = false;
+                JOptionPane.showMessageDialog(null, "Thank you for playing!");
+            }
+        }
+    }
+}

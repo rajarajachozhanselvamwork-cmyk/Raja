@@ -1,0 +1,87 @@
+import java.util.Scanner;
+
+public class ATMInterface {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Initialize user account
+        String correctPin = "1234";
+        double balance = 5000.0; // Initial balance
+        int attempts = 0;
+        int maxAttempts = 3;
+
+        // PIN verification
+        while (attempts < maxAttempts) {
+            System.out.print("Enter your PIN: ");
+            String enteredPin = sc.nextLine();
+
+            if (enteredPin.equals(correctPin)) {
+                System.out.println("PIN accepted. Welcome!\n");
+
+                boolean exit = false;
+                while (!exit) {
+                    System.out.println("==== ATM Menu ====");
+                    System.out.println("1. Check Balance");
+                    System.out.println("2. Deposit Money");
+                    System.out.println("3. Withdraw Money");
+                    System.out.println("4. Exit");
+                    System.out.print("Enter your choice: ");
+                    int choice = sc.nextInt();
+
+                    switch (choice) {
+                        case 1:
+                            System.out.println("Your current balance is: $" + balance);
+                            break;
+
+                        case 2:
+                            System.out.print("Enter amount to deposit: $");
+                            double depositAmount = sc.nextDouble();
+                            if (depositAmount > 0) {
+                                balance += depositAmount;
+                                System.out.println("Deposit successful. New balance: $" + balance);
+                            } else {
+                                System.out.println("Invalid amount. Try again.");
+                            }
+                            break;
+
+                        case 3:
+                            System.out.print("Enter amount to withdraw: $");
+                            double withdrawAmount = sc.nextDouble();
+                            if (withdrawAmount > balance) {
+                                System.out.println("Insufficient balance. Transaction failed.");
+                            } else if (withdrawAmount <= 0) {
+                                System.out.println("Invalid amount. Try again.");
+                            } else {
+                                balance -= withdrawAmount;
+                                System.out.println("Please collect your cash.");
+                                System.out.println("Remaining balance: $" + balance);
+                            }
+                            break;
+
+                        case 4:
+                            System.out.println("Thank you for using the ATM. Goodbye!");
+                            exit = true;
+                            break;
+
+                        default:
+                            System.out.println("Invalid choice. Try again.");
+                    }
+
+                    System.out.println(); // Empty line for readability
+                }
+
+                break; // Exit PIN verification loop after successful login
+            } else {
+                attempts++;
+                System.out.println("Incorrect PIN. Attempts left: " + (maxAttempts - attempts));
+                if (attempts == maxAttempts) {
+                    System.out.println("Maximum attempts reached. Exiting...");
+                    System.exit(0);
+                }
+            }
+        }
+
+        sc.close();
+    }
+}

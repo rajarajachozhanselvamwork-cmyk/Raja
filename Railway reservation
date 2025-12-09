@@ -1,0 +1,136 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Random;
+
+class Passenger {
+    private int pnrNumber;
+    private String name;
+    private String trainNumber;
+    private String classType;
+    private String journeyDate;
+    private String from;
+    private String to;
+
+    public Passenger(String name, String trainNumber, String classType, String journeyDate, String from, String to) {
+        Random random = new Random();
+        this.pnrNumber = random.nextInt(9000) + 1000; // Random 4-digit PNR
+        this.name = name;
+        this.trainNumber = trainNumber;
+        this.classType = classType;
+        this.journeyDate = journeyDate;
+        this.from = from;
+        this.to = to;
+    }
+
+    public int getPnrNumber() {
+        return pnrNumber;
+    }
+
+    public void displayInfo() {
+        System.out.println("PNR Number: " + pnrNumber);
+        System.out.println("Passenger Name: " + name);
+        System.out.println("Train Number: " + trainNumber);
+        System.out.println("Class Type: " + classType);
+        System.out.println("Journey Date: " + journeyDate);
+        System.out.println("From: " + from);
+        System.out.println("To: " + to);
+        System.out.println("----------------------------");
+    }
+}
+
+public class RailwayReservationSystem {
+    private static List<Passenger> passengerList = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("==== Railway Reservation System ====");
+            System.out.println("1. Book Ticket");
+            System.out.println("2. Cancel Ticket");
+            System.out.println("3. Show All Bookings");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    bookTicket(sc);
+                    break;
+                case 2:
+                    cancelTicket(sc);
+                    break;
+                case 3:
+                    showAllBookings();
+                    break;
+                case 4:
+                    System.out.println("Exiting the system. Thank you!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+            System.out.println();
+        } while (choice != 4);
+
+        sc.close();
+    }
+
+    private static void bookTicket(Scanner sc) {
+        System.out.print("Enter passenger name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter train number: ");
+        String trainNumber = sc.nextLine();
+
+        System.out.print("Enter class type (Sleeper/AC/First Class): ");
+        String classType = sc.nextLine();
+
+        System.out.print("Enter journey date (YYYY-MM-DD): ");
+        String journeyDate = sc.nextLine();
+
+        System.out.print("Enter departure station: ");
+        String from = sc.nextLine();
+
+        System.out.print("Enter destination station: ");
+        String to = sc.nextLine();
+
+        Passenger passenger = new Passenger(name, trainNumber, classType, journeyDate, from, to);
+        passengerList.add(passenger);
+
+        System.out.println("Ticket booked successfully! Your PNR Number is: " + passenger.getPnrNumber());
+    }
+
+    private static void cancelTicket(Scanner sc) {
+        System.out.print("Enter PNR number to cancel: ");
+        int pnr = sc.nextInt();
+        boolean found = false;
+
+        for (int i = 0; i < passengerList.size(); i++) {
+            if (passengerList.get(i).getPnrNumber() == pnr) {
+                passengerList.remove(i);
+                found = true;
+                System.out.println("Ticket cancelled successfully!");
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("PNR not found. Cancellation failed.");
+        }
+    }
+
+    private static void showAllBookings() {
+        if (passengerList.isEmpty()) {
+            System.out.println("No bookings found.");
+            return;
+        }
+
+        System.out.println("=== All Bookings ===");
+        for (Passenger p : passengerList) {
+            p.displayInfo();
+        }
+    }
+}
